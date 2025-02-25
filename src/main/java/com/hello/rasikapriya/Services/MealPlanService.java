@@ -20,7 +20,7 @@ public class MealPlanService {
         this.mealPlanRepository = mealPlanRepository;
     }
 
-    // ✅ Save multiple meal plans
+ 
     public void addMealPlans(List<MealPlan> mealPlans) {
         mealPlanRepository.saveAll(mealPlans);
     }
@@ -37,19 +37,19 @@ public class MealPlanService {
         return mealPlanRepository.findByUserId(userId);
     }
 
-    // ✅ Sorting logic
+   
     public List<MealPlan> getSortedMealPlans(String field, String order) {
         Sort sort = order.equalsIgnoreCase("desc") ? Sort.by(field).descending() : Sort.by(field).ascending();
         return mealPlanRepository.findAll(sort);
     }
 
-    // ✅ Pagination logic
+
     public Page<MealPlan> getMealPlansWithPagination(int pageNumber, int pageSize) {
         Pageable pageable = PageRequest.of(pageNumber, pageSize);
         return mealPlanRepository.findAll(pageable);
     }
 
-    // ✅ Pagination with Sorting
+    
     public Page<MealPlan> getMealPlansWithPaginationAndSorting(int pageNumber, int pageSize, String field, String order) {
         Sort sort = order.equalsIgnoreCase("desc") ? Sort.by(field).descending() : Sort.by(field).ascending();
         Pageable pageable = PageRequest.of(pageNumber, pageSize, sort);
