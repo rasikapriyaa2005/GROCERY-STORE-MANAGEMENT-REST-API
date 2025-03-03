@@ -18,18 +18,14 @@ public class User {
     @Column(nullable = false)
     private String password;
 
-    // Default constructor
-    public User() {
-    }
+    public User() {}
 
-    // Parameterized constructor
     public User(String name, String email, String password) {
         this.name = name;
         this.email = email;
         this.password = password;
     }
 
-    // Getters and Setters
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
 

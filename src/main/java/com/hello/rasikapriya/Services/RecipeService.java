@@ -53,4 +53,22 @@ public class RecipeService {
         Pageable pageable = PageRequest.of(pageNumber, pageSize, Sort.by(field));
         return recipeRepo.findAll(pageable);
     }
+    public Recipe updateRecipe(Long id, Recipe recipe) {
+        return recipeRepo.findById(id)
+                .map(existingRecipe -> {
+                    existingRecipe.setName(recipe.getName());
+                    existingRecipe.setCategory(recipe.getCategory());
+                    existingRecipe.setIngredients(recipe.getIngredients());
+                    existingRecipe.setCookingTime(recipe.getCookingTime());
+                   
+                    return recipeRepo.save(existingRecipe);
+                })
+                .orElse(null);
+    }
+    
+    public void deleteRecipeById(Long id) {
+        recipeRepo.deleteById(id);
+    }
+    
+    
 }

@@ -20,7 +20,7 @@ public class Recipe {
     private int cookingTime;
 
     @Column(nullable = false)
-    private String ingredients; // Storing ingredients as a comma-separated string
+    private String ingredients; 
 
     public Recipe() {}
 

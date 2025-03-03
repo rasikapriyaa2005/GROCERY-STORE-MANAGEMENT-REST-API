@@ -14,12 +14,12 @@ public class MealPlan {
     private String title;
     private Date startDate;
     private Date endDate;
-    private Long userId; // Storing userId directly instead of mapping
+    private Long userId; 
 
     @ElementCollection
-    private List<Long> recipeIds; // Storing recipe IDs instead of mapping
+    private List<Long> recipeIds; 
 
-    // Constructors
+    
     public MealPlan() {}
 
     public MealPlan(String title, Date startDate, Date endDate, Long userId, List<Long> recipeIds) {
@@ -30,7 +30,7 @@ public class MealPlan {
         this.recipeIds = recipeIds;
     }
 
-    // Getters and Setters
+    
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
 
@@ -49,3 +49,4 @@ public class MealPlan {
     public List<Long> getRecipeIds() { return recipeIds; }
     public void setRecipeIds(List<Long> recipeIds) { this.recipeIds = recipeIds; }
 }
+

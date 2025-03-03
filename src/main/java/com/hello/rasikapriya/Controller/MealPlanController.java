@@ -20,7 +20,7 @@ public class MealPlanController {
         this.mealPlanService = mealPlanService;
     }
 
-    // ✅ Accepts an array of Meal Plans instead of a single object
+    
     @PostMapping
     public ResponseEntity<String> addMealPlans(@RequestBody List<MealPlan> mealPlans) {
         mealPlanService.addMealPlans(mealPlans);
@@ -43,7 +43,7 @@ public class MealPlanController {
         return ResponseEntity.ok(mealPlanService.getMealPlansByUserId(userId));
     }
 
-    // ✅ Sorting by a specific field (ASC or DESC)
+    
     @GetMapping("/sort/{field}")
     public ResponseEntity<List<MealPlan>> getSortedMealPlans(
             @PathVariable String field,
@@ -51,7 +51,7 @@ public class MealPlanController {
         return ResponseEntity.ok(mealPlanService.getSortedMealPlans(field, order));
     }
 
-    // ✅ Pagination support
+    
     @GetMapping("/page/{pageNumber}/size/{pageSize}")
     public ResponseEntity<Page<MealPlan>> getMealPlansWithPagination(
             @PathVariable int pageNumber,
@@ -59,7 +59,7 @@ public class MealPlanController {
         return ResponseEntity.ok(mealPlanService.getMealPlansWithPagination(pageNumber, pageSize));
     }
 
-    // ✅ Pagination with Sorting
+  
     @GetMapping("/page/{pageNumber}/size/{pageSize}/sort/{field}")
     public ResponseEntity<Page<MealPlan>> getMealPlansWithPaginationAndSorting(
             @PathVariable int pageNumber,
@@ -81,3 +81,4 @@ public class MealPlanController {
         return ResponseEntity.ok("Meal plan deleted successfully");
     }
 }
+
