@@ -26,8 +26,10 @@ public interface RecipeRepo extends JpaRepository<Recipe, Long> {
 
     @Query("SELECT r FROM Recipe r WHERE r.cookingTime <= ?1")
     List<Recipe> findByCookingTimeLessThanEqual(int cookingTime);
+
     @Query("UPDATE Recipe r SET r.name = ?2, r.category = ?3, r.ingredients = ?4, r.cookingTime = ?5 WHERE r.id = ?1")
     void updateRecipe(Long id, String name, String category, String ingredients, int cookingTime);
 
+    @SuppressWarnings("null")
     Page<Recipe> findAll(Pageable pageable);
 }

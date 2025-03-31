@@ -62,15 +62,14 @@ public class MealPlanService {
                     existingPlan.setTitle(mealPlan.getTitle());
                     existingPlan.setStartDate(mealPlan.getStartDate());
                     existingPlan.setEndDate(mealPlan.getEndDate());
-                    existingPlan.setUserId(mealPlan.getUserId());
-                    existingPlan.setRecipeIds(mealPlan.getRecipeIds());
+                    existingPlan.setUser(mealPlan.getUser());  // Fixed user assignment
                     return mealPlanRepository.save(existingPlan);
                 })
                 .orElse(null);
     }
+    
 
     public void deleteMealPlan(Long id) {
         mealPlanRepository.deleteById(id);
     }
-    
 }

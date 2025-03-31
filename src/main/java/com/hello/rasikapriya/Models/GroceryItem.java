@@ -1,13 +1,18 @@
 package com.hello.rasikapriya.Models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+import java.time.LocalDate;
+import java.util.List;
+import java.util.Objects;
 
 @Entity
 @Table(name = "grocery_items")
 public class GroceryItem {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int itemId;
+    private Long itemId;  // Changed from int to Long
 
     @Column(nullable = false)
     private String itemName;
@@ -21,12 +26,23 @@ public class GroceryItem {
     @Column(nullable = false)
     private int quantity;
 
-    private String expiryDate;
+    @Column(nullable = false)
+    private LocalDate expiryDate;
 
- 
+    @ManyToMany
+    @JoinTable(
+        name = "recipe_grocery_item", 
+        joinColumns = @JoinColumn(name = "grocery_item_id"), 
+        inverseJoinColumns = @JoinColumn(name = "recipe_id")
+    )
+    @JsonIgnore  // Prevent infinite recursion
+    private List<Recipe> recipes;
+
+    // Default Constructor
     public GroceryItem() {}
 
-    public GroceryItem(String itemName, String category, double price, int quantity, String expiryDate) {
+    // Parameterized Constructor
+    public GroceryItem(String itemName, String category, double price, int quantity, LocalDate expiryDate) {
         this.itemName = itemName;
         this.category = category;
         this.price = price;
@@ -34,9 +50,9 @@ public class GroceryItem {
         this.expiryDate = expiryDate;
     }
 
-    
-    public int getItemId() { return itemId; }
-    public void setItemId(int itemId) { this.itemId = itemId; }
+    // Getters and Setters
+    public Long getItemId() { return itemId; }
+    public void setItemId(Long itemId) { this.itemId = itemId; }
 
     public String getItemName() { return itemName; }
     public void setItemName(String itemName) { this.itemName = itemName; }
@@ -50,6 +66,36 @@ public class GroceryItem {
     public int getQuantity() { return quantity; }
     public void setQuantity(int quantity) { this.quantity = quantity; }
 
-    public String getExpiryDate() { return expiryDate; }
-    public void setExpiryDate(String expiryDate) { this.expiryDate = expiryDate; }
+    public LocalDate getExpiryDate() { return expiryDate; }
+    public void setExpiryDate(LocalDate expiryDate) { this.expiryDate = expiryDate; }
+
+    public List<Recipe> getRecipes() { return recipes; }
+    public void setRecipes(List<Recipe> recipes) { this.recipes = recipes; }
+
+    // Equals & HashCode
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        GroceryItem that = (GroceryItem) o;
+        return Objects.equals(itemId, that.itemId);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(itemId);
+    }
+
+    // toString() Method
+    @Override
+    public String toString() {
+        return "GroceryItem{" +
+                "itemId=" + itemId +
+                ", itemName='" + itemName + '\'' +
+                ", category='" + category + '\'' +
+                ", price=" + price +
+                ", quantity=" + quantity +
+                ", expiryDate=" + expiryDate +
+                '}';
+    }
 }

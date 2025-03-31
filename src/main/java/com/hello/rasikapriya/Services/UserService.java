@@ -8,9 +8,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -20,42 +18,32 @@ public class UserService {
     @Autowired
     private UserRepository userRepository;
 
-    @Transactional
     public List<User> addUsers(List<User> users) {
-    List<User> savedUsers = new ArrayList<>();
-    for (User user : users) {
-        // Check if email already exists
-        Optional<User> existingUser = userRepository.findByEmail(user.getEmail());
-        if (existingUser.isPresent()) {
-            throw new RuntimeException("Email already exists: " + user.getEmail());
+        if (users == null || users.isEmpty()) {
+            throw new IllegalArgumentException("User list cannot be empty");
         }
-        savedUsers.add(userRepository.save(user));
+        return userRepository.saveAll(users);
     }
-    return savedUsers;
-}
-
 
     public List<User> getAllUsers() {
-        return userRepository.getAllUsers();
+        return userRepository.findAll();
     }
 
     public Optional<User> getUserById(Long id) {
-        return userRepository.findUserById(id);
+        return userRepository.findById(id);
     }
 
-    public Optional<User> findUserByEmail(String email) {
-        return userRepository.findByEmail(email);
+    public User updateUser(Long id, User newUser) {
+        return userRepository.findById(id).map(existingUser -> {
+            existingUser.setName(newUser.getName());
+            existingUser.setEmail(newUser.getEmail());
+            existingUser.setPassword(newUser.getPassword());
+            return userRepository.save(existingUser);
+        }).orElseThrow(() -> new RuntimeException("User not found with id " + id));
     }
 
-    @Transactional
-    public User updateUser(Long id, User updatedUser) {
-        userRepository.updateUser(id, updatedUser.getName(), updatedUser.getEmail(), updatedUser.getPassword());
-        return updatedUser;
-    }
-
-    @Transactional
     public void deleteUser(Long id) {
-        userRepository.deleteUserById(id);
+        userRepository.deleteById(id);
     }
 
     public Page<User> getUsersWithPagination(int pageNumber, int pageSize) {
@@ -70,5 +58,9 @@ public class UserService {
     public Page<User> getUsersWithPaginationAndSorting(int pageNumber, int pageSize, String field) {
         Pageable pageable = PageRequest.of(pageNumber, pageSize, Sort.by(Sort.Direction.ASC, field));
         return userRepository.findAll(pageable);
+    }
+
+    public Optional<User> findUserByEmail(String email) {
+        return userRepository.findByEmail(email);
     }
 }

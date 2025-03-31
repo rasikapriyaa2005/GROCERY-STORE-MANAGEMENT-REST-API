@@ -15,6 +15,20 @@ public class PurchaseDetails {
     private double totalAmount;
     private String status;
 
+    @OneToOne
+    @JoinColumn(name = "user_id", unique = true, nullable = false)
+    private User user;
+
+    public PurchaseDetails() {}
+
+    public PurchaseDetails(String customerName, LocalDate purchaseDate, double totalAmount, String status, User user) {
+        this.customerName = customerName;
+        this.purchaseDate = purchaseDate;
+        this.totalAmount = totalAmount;
+        this.status = status;
+        this.user = user;
+    }
+
     public int getPurchaseId() { return purchaseId; }
     public void setPurchaseId(int purchaseId) { this.purchaseId = purchaseId; }
 
@@ -29,4 +43,7 @@ public class PurchaseDetails {
 
     public String getStatus() { return status; }
     public void setStatus(String status) { this.status = status; }
+
+    public User getUser() { return user; }
+    public void setUser(User user) { this.user = user; }
 }

@@ -9,16 +9,20 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.logging.Logger;
 
 @RestController
 @RequestMapping("/api/users")
 public class UserController {
+
+    private static final Logger logger = Logger.getLogger(UserController.class.getName());
 
     @Autowired
     private UserService userService;
 
     @PostMapping
     public ResponseEntity<List<User>> createUsers(@RequestBody List<User> users) {
+        logger.info("Received request to create users: " + users);
         List<User> savedUsers = userService.addUsers(users);
         return ResponseEntity.ok(savedUsers);
     }
@@ -30,12 +34,12 @@ public class UserController {
 
     @GetMapping("/{id}")
     public ResponseEntity<User> getUserById(@PathVariable Long id) {
-        return userService.getUserById(id)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+        Optional<User> user = userService.getUserById(id);
+        return user.map(ResponseEntity::ok)
+                   .orElse(ResponseEntity.notFound().build());
     }
 
-    @PutMapping("/{id}") 
+    @PutMapping("/{id}")
     public ResponseEntity<User> updateUser(@PathVariable Long id, @RequestBody User user) {
         return ResponseEntity.ok(userService.updateUser(id, user));
     }
@@ -47,7 +51,8 @@ public class UserController {
     }
 
     @GetMapping("/page/{pageNumber}/size/{pageSize}")
-    public ResponseEntity<Page<User>> getUsersWithPagination(@PathVariable int pageNumber, @PathVariable int pageSize) {
+    public ResponseEntity<Page<User>> getUsersWithPagination(
+            @PathVariable int pageNumber, @PathVariable int pageSize) {
         return ResponseEntity.ok(userService.getUsersWithPagination(pageNumber, pageSize));
     }
 
@@ -58,16 +63,14 @@ public class UserController {
 
     @GetMapping("/page/{pageNumber}/size/{pageSize}/sortBy/{field}")
     public ResponseEntity<Page<User>> getUsersWithPaginationAndSorting(
-            @PathVariable int pageNumber, 
-            @PathVariable int pageSize, 
-            @PathVariable String field) {
+            @PathVariable int pageNumber, @PathVariable int pageSize, @PathVariable String field) {
         return ResponseEntity.ok(userService.getUsersWithPaginationAndSorting(pageNumber, pageSize, field));
     }
 
     @GetMapping("/email/{email}")
     public ResponseEntity<User> getUserByEmail(@PathVariable String email) {
-        return userService.findUserByEmail(email)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+        Optional<User> user = userService.findUserByEmail(email);
+        return user.map(ResponseEntity::ok)
+                   .orElse(ResponseEntity.notFound().build());
     }
 }

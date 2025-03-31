@@ -5,6 +5,7 @@ import com.hello.rasikapriya.Repositories.RecipeRepo;
 import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
 
+import java.util.Arrays;
 import java.util.List;
 
 @Service
@@ -41,6 +42,10 @@ public class RecipeService {
     }
 
     public List<Recipe> getSortedRecipes(String field) {
+        List<String> validFields = Arrays.asList("name", "category", "cookingTime", "ingredients");
+        if (!validFields.contains(field)) {
+            throw new IllegalArgumentException("Invalid sorting field: " + field);
+        }
         return recipeRepo.findAll(Sort.by(field));
     }
 
@@ -50,9 +55,14 @@ public class RecipeService {
     }
 
     public Page<Recipe> getPaginatedAndSortedRecipes(int pageNumber, int pageSize, String field) {
+        List<String> validFields = Arrays.asList("name", "category", "cookingTime", "ingredients");
+        if (!validFields.contains(field)) {
+            throw new IllegalArgumentException("Invalid sorting field: " + field);
+        }
         Pageable pageable = PageRequest.of(pageNumber, pageSize, Sort.by(field));
         return recipeRepo.findAll(pageable);
     }
+
     public Recipe updateRecipe(Long id, Recipe recipe) {
         return recipeRepo.findById(id)
                 .map(existingRecipe -> {
@@ -60,15 +70,19 @@ public class RecipeService {
                     existingRecipe.setCategory(recipe.getCategory());
                     existingRecipe.setIngredients(recipe.getIngredients());
                     existingRecipe.setCookingTime(recipe.getCookingTime());
-                   
                     return recipeRepo.save(existingRecipe);
                 })
                 .orElse(null);
     }
-    
+
     public void deleteRecipeById(Long id) {
         recipeRepo.deleteById(id);
     }
-    
-    
+
+    public void deleteRecipesByCategory(String category) {
+        List<Recipe> recipes = recipeRepo.findByCategory(category);
+        if (!recipes.isEmpty()) {
+            recipeRepo.deleteAll(recipes);
+        }
+    }
 }

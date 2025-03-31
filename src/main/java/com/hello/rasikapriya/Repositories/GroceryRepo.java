@@ -38,5 +38,6 @@ public interface GroceryRepo extends JpaRepository<GroceryItem, Integer> {
     @Query("DELETE FROM GroceryItem g WHERE g.expiryDate < ?1")
     void deleteExpiredItems(String expiryDate);
 
+    @SuppressWarnings("null")
     List<GroceryItem> findAll(Sort sort);
 }
